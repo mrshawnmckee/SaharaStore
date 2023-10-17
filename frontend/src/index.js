@@ -14,3 +14,6 @@ root.render(
 
 
 reportWebVitals();
+
+
+// Some styling in the assests folder on the github, ex making the stars yellow, etc
