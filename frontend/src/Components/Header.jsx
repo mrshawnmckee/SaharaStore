@@ -8,9 +8,8 @@ const Header = () => {
       <Navbar bg= "dark" variant="dark" expand="md" collapseOnSelect>   {/* to make hamburger menu appear sonner, use md instead of lg on expand */}
         <Container>
           <LinkContainer to='/'>
-            <Navbar.Brand href='/'>Sahara Store</Navbar.Brand>          
+            <Navbar.Brand>Sahara Store</Navbar.Brand>
           </LinkContainer>
-
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className='ms-auto'>
