@@ -5,6 +5,11 @@ import { createSlice } from '@reduxjs/toolkit'
 // The localStorage.getItem("cart") checks for items in the cart, if not, it is an object cartitems with an empty array
 const initialState = localStorage.getItem("cart") ? JSON.parse (localStorage.getItem("cart")) : {cartItems: []}
 
+// round the num to two decimal places
+const addDecimals = (num) => {
+    return (Math.round(num * 100) / 100).toFixed(2);
+}
+
 const cartSlice = createSlice({
     name: "cart",
     initialState,
@@ -22,15 +27,31 @@ const cartSlice = createSlice({
                 state.cartItems = [...state.cartItems, item];       //Adding the new item to the array
             }
 
-            //Calculate items price
-            //Calculate shipping price
-            //Calculate tax price
-            //Calculate total price
+            //Calculate items price, acc set to zero after the acc+itemprice* qty item
+            state.itemsPrice = addDecimals(state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
 
+            //Calculate shipping price --if order > $100, shipping free, else shipping = $10
+            state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
+
+            //Calculate tax price (15% tax)
+            state.taxPrice = addDecimals(Number((0.15 * state.itemsPrice).toFixed(2)));
+
+            //Calculate total price
+            state.totalPrice = (
+                Number(state.itemsPrice) + 
+                Number(state.shippingPrice) +
+                Number(state.taxPrice)
+            ).toFixed(2);
+
+            // Save the total to local storage
+            localStorage.setItem('cart', JSON.stringify(state));
         }
     },       //Any functions that have to do with the cart, ex add to cart, remove, etc
 
 })
+
+// import this to product screen
+export const { addToCart } = cartSlice.actions;
 
 // inport this into store
 export default cartSlice.reducer;
