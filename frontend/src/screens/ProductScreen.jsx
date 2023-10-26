@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
 import Rating from '../Components/Rating'
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice'
+import Loader from '../Components/Loader'
+import Message from '../Components/Message'
 // import products from '../products'
 
 const ProductScreen = () => {
@@ -19,8 +21,9 @@ const ProductScreen = () => {
       </Link>
 
       { isLoading ? (
-        <h2>Loading...</h2>
-      ) : error ? (<div>{ error?.data?.message || error.error }</div>) : (
+        <Loader />
+      ) : error ? (<Message variant='danger'>{ error?.data?.message || error.error }</Message>) : (
+    
 
           <Row> {/* 12 columns total; so md=5 md=4 and md=3 */}
             <Col md={5}>
