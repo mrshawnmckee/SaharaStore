@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { FaShoppingCart, FaUser } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 // The LinkCOntainer option makes the link faster
 import { LinkContainer } from 'react-router-bootstrap'
 

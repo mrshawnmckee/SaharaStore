@@ -2,7 +2,7 @@ import { useState } from 'react'    //THis is for the quantity select
 import { useParams, useNavigate } from 'react-router-dom'   //useNavigate is for the addToCart
 import { Link } from 'react-router-dom'
 import { Form, Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'   //For teh addToCart
+import { useDispatch } from 'react-redux'   //For teh addToCart, dispatch an action
 import Rating from '../Components/Rating'
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice'
 import Loader from '../Components/Loader'
