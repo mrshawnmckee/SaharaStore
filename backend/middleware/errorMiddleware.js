@@ -10,7 +10,7 @@ const notFound = (res, req, next) => {
 // Overwrite default express error handler
 const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    let message = error.message;
+    let message = err.message;
     
     // Check for mongoose bad objectId (ex, instead of html page if product does not exist)
     if (err.name === 'CastError' && err.kind === 'ObjectId') {

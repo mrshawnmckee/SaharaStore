@@ -1,11 +1,42 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import User from '../models/userModel.js';
+import jwt from 'jsonwebtoken'
 
 // @desc    Auth user & Get token
 // @route   POST /api/users/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
-    res.send('auth user')
+    // Destructuring object with email and password for use by the app
+    const { email, password } = req.body;
+
+    const user = await User.findOne( {email} )    //This is confirming that the email matches the one in the record/DB; email is shorthand of email: email
+
+    if (user && await user.matchPassword(password)) {                         //If there is a user that matches, and the passwords match, respond with this data/info
+        // json web token
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+            expiresIn: '30d'        //This is 30 days, since it is for the course, leaving it longer. 1d might be better for production
+        });
+
+        // set JWT as HHTP-Only cookie
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            // This is set for only true in production, because https is needed, which is not on the dev environment
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            // max age is when it will expire, setting it to the same as 30 days; this is in ms, so multiplying to make it 30d
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
+        res.json({
+            _id: user._id,
+            name: user.name, 
+            email: user.email,
+            isAdmin: user.isAdmin
+        });
+    } else {
+        res.status(401);        //if this user does not exist, status not authorized
+        throw new Error("Invalid email or password");   //From our custom error handler
+    }
 });
 
 // @desc    Register user
