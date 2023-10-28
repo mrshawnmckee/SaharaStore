@@ -25,15 +25,22 @@ const cartSlice = createSlice({
                 state.cartItems = [...state.cartItems, item];       //Adding the new item to the array
             }
 
-            return updateCart(state)
+            return updateCart(state)        //Update cart is in the utils file
            
+        },
+        removeFromCart: (state, action) => {
+            // Returning the cart items that dont equal the one we want to delete
+            state.cartItems = state.cartItems.filter((x) => x._id !== action.payload);
+
+            // Update local storage
+            return updateCart(state);
         }
     },       //Any functions that have to do with the cart, ex add to cart, remove, etc
 
 })
 
 // import this to product screen
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart } = cartSlice.actions;
 
 // inport this into store
 export default cartSlice.reducer;
