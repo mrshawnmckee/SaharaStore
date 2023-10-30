@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import asyncHandler from './asyncHandler';
-import User from '../models/userModel';
+import asyncHandler from './asyncHandler.js';
+import User from '../models/userModel.js';
 
 // Protect Routes
 const protect = asyncHandler(async (req, res, next) => {
@@ -39,3 +39,5 @@ const admin = (req, res, next) => {
 
 export { protect, admin };
 
+// Then must apply to routes in the userRoutes file, and add protect middelware before
+// ex router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile)
