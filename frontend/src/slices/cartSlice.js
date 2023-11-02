@@ -4,7 +4,9 @@ import { updateCart } from '../utils/cartUtils';
 
 // Items will be stored in local storage, so that if we leave the site and come back, they will still be in the cart
 // The localStorage.getItem("cart") checks for items in the cart, if not, it is an object cartitems with an empty array
-const initialState = localStorage.getItem("cart") ? JSON.parse (localStorage.getItem("cart")) : {cartItems: []}
+const initialState = localStorage.getItem("cart") 
+  ? JSON.parse (localStorage.getItem("cart")) 
+: {cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal'}
 
 
 
@@ -34,13 +36,18 @@ const cartSlice = createSlice({
 
             // Update local storage
             return updateCart(state);
+        },
+        saveShippingAddress: (state, action) => {
+            state.shippingAddress = action.payload; 
+            return updateCart(state)
         }
+
     },       //Any functions that have to do with the cart, ex add to cart, remove, etc
 
 })
 
 // import this to product screen
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
 
 // inport this into store
 export default cartSlice.reducer;
