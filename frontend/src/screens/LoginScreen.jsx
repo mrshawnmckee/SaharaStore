@@ -1,11 +1,38 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../Components/FormContainer';
+import Loader from '../Components/Loader';
+import { useLoginMutation } from '../slices/usersApiSlice';
+import { setCredentials } from '../slices/authSlice';
+import { toast } from 'react-toastify';
+
 
 const LoginScreen = () => {''
-    const [ email, setEmail ] = useState('')
-    const [ password, setPassword ] = useState('')
+    const [ email, setEmail ] = useState('');
+    const [ password, setPassword ] = useState('');
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // Logging in from teh login mutation
+    const [login, { isLoading }] = useLoginMutation();
+
+    const { userInfo } = useSelector((state) => state.auth);
+
+    // Looking to see if redirect(whan going to cart page) is there on shipping screen, so that it redirects to the correct page if user is logged in: 
+    const { search } = useLocation();
+    const sp = new URLSearchParams(search);
+    const redirect = sp.get('redirect') || '/';
+
+    useEffect(() => {
+        // if there is user info in local storage, navigate to the redirect if user is logged in
+        if (userInfo) {
+            navigate(redirect);
+        }
+    }, [userInfo, redirect, navigate])
+
 
     const submitHandler = (e) => {
         e.preventDefault()
