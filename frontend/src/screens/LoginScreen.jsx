@@ -19,7 +19,7 @@ const LoginScreen = () => {''
     // Logging in from teh login mutation
     const [login, { isLoading }] = useLoginMutation();
 
-    const { userInfo } = useSelector((state) => state.auth);
+    const { userInfo } = useSelector((state) => state.auth);        //auth part of state
 
     // Looking to see if redirect(whan going to cart page) is there on shipping screen, so that it redirects to the correct page if user is logged in: 
     const { search } = useLocation();
@@ -34,9 +34,15 @@ const LoginScreen = () => {''
     }, [userInfo, redirect, navigate])
 
 
-    const submitHandler = (e) => {
+    const submitHandler = async(e) => {
         e.preventDefault()
-        console.log('submit')
+        try {
+            const res = await login({ email, password }).unwrap();
+            dispatch(setCredentials({...res, }));
+            navigate(redirect);
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
     }
     
   return (
@@ -67,13 +73,15 @@ const LoginScreen = () => {''
                 </Form.Control>
             </Form.Group>
 
-            <Button type='submit' variant='primary' className='mt-2'>
+            <Button type='submit' variant='primary' className='mt-2' disabled={ isLoading }>
                 Sign In
             </Button>
+
+            { isLoading && <Loader /> }
         </Form>
         <Row className='py-3'>
             <Col>
-                New Customer? <Link to='/register'>Register</Link>
+                New Customer? <Link to={ redirect ? `/register?redirect${redirect}` : '/register' }>Register</Link>
             </Col>
         </Row>
     </FormContainer>

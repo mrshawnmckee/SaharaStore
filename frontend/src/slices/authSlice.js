@@ -15,12 +15,17 @@ const authSlice = createSlice({
             state.userInfo = action.payload;
             // To string for local storage
             localStorage.setItem('userInfo', JSON.stringify(action.payload));
+        },
+        // THis is logout info for local, the server logout stuff is in usersapislice
+        logout: (state, action) => {
+            state.userInfo = null;
+            localStorage.removeItem('userInfo');
         }
-    }
+    },
 })
 
 // Want to export this as an action so that we can call it/use it
-export const { setCredentials } = authSlice.actions;
+export const { setCredentials, logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
