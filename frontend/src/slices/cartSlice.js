@@ -39,7 +39,11 @@ const cartSlice = createSlice({
         },
         saveShippingAddress: (state, action) => {
             state.shippingAddress = action.payload; 
-            return updateCart(state)
+            return updateCart(state);
+        },
+        savePaymentMethod: (state, action) => {
+            state.paymentMethod = action.payload;
+            return updateCart(state);
         }
 
     },       //Any functions that have to do with the cart, ex add to cart, remove, etc
@@ -47,7 +51,7 @@ const cartSlice = createSlice({
 })
 
 // import this to product screen
-export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
 
 // inport this into store
 export default cartSlice.reducer;
