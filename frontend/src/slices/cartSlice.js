@@ -44,6 +44,11 @@ const cartSlice = createSlice({
         savePaymentMethod: (state, action) => {
             state.paymentMethod = action.payload;
             return updateCart(state);
+        },
+        // Clear the cart after the order is created
+        clearCartItems: (state, action) => {
+            state.cartItems = [];       //set cartItems to empty array(clearing it), then update cart to that empty array
+            return updateCart(state);
         }
 
     },       //Any functions that have to do with the cart, ex add to cart, remove, etc
@@ -51,7 +56,12 @@ const cartSlice = createSlice({
 })
 
 // import this to product screen
-export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
+export const { addToCart, 
+    removeFromCart, 
+    saveShippingAddress, 
+    savePaymentMethod, 
+    clearCartItems 
+} = cartSlice.actions;
 
 // inport this into store
 export default cartSlice.reducer;
