@@ -15,6 +15,9 @@ const PlaceOrderScreen = () => {
     //Get cart state
     const cart = useSelector((state) => state.cart);
 
+    // Create order from orderapiSlice
+    const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+
     useEffect(() => { 
         // Check for shiiping info and payment info, if not present, navigate to proper screen
         if (!cart.shippingAddress.address) {
@@ -23,6 +26,25 @@ const PlaceOrderScreen = () => {
             navigate('/payment')
         }
     }, [cart.paymentMethod, cart.shippingAddress.address, navigate])
+
+    const placeOrderHandler = async () => {
+        try {
+          const res = await createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: cart.shippingPrice,
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice,
+          }).unwrap();          //again, unwrapping because it is returning a promise
+        //   from cart slice, so we have to dispatch it, if it is from a mutation(ex create order) from an api slice, we can just call it
+          dispatch(clearCartItems());
+          navigate(`/order/${res._id}`);
+        } catch {
+            toast.error(error);
+        }
+    };
 
   return (
     <>
@@ -53,10 +75,17 @@ const PlaceOrderScreen = () => {
                                     <Row>
                                         <Col md={1}>
                                             <Image src={item.image} alt={item.name}
-                                            fluid rounded />
+                                            fluid 
+                                            rounded 
+                                            />
                                         </Col>
                                         <Col>
-                                            
+                                            <Link to={`/products/${item.product}`}>
+                                                {item.name}
+                                            </Link>
+                                        </Col>
+                                        <Col md={4}>
+                                            { item.qty } x ${ item.price } = ${ item.qty * item.price }
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
@@ -66,7 +95,63 @@ const PlaceOrderScreen = () => {
                 </ListGroup.Item>
             </ListGroup>
         </Col>
-        <Col md={4}>Column</Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant='flush'>
+                <ListGroup.Item>
+                    <h2>Order Summary</h2>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Row>
+                        <Col>Items:</Col>
+                        <Col>
+                        ${ cart.itemsPrice }
+                        </Col>
+                    </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Row>
+                        <Col>Shipping:</Col>
+                        <Col>
+                        ${ cart.shippingPrice }
+                        </Col>
+                    </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Row>
+                        <Col>Tax:</Col>
+                        <Col>
+                        ${ cart.taxPrice }
+                        </Col>
+                    </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Row>
+                        <Col>Total:</Col>
+                        <Col>
+                        ${ cart.totalPrice }
+                        </Col>
+                    </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    {/* Had to change {error} to {error.data.message} */}
+                    { error && <Message variant='danger'>{error.data.message}</Message> }
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn-block"
+                      disabled={cart.cartItems.length === 0}
+                      onClick={ placeOrderHandler }
+                    >
+                        Place Order
+                    </Button>
+                    {/* If is loading, show the loader */}
+                    {isLoading && <Loader />}
+                </ListGroup.Item>
+            </ListGroup>
+          </Card>    
+        </Col>
       </Row>
     </>
   )

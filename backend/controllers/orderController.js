@@ -21,7 +21,7 @@ const addOrderItems = asyncHandler (async (req, res) => {
     res.status(400);
     throw new Error('No order items');
   } else {
-    const order = newOrder ({
+    const order = new Order ({
         // orderItems (in order model)has name, etc already passed in, but product is not, so we must map through the name, qty, image and price
         // which will be a spread operator (...x), and tehn add product object id, which we get with x._id
         // Then set ._id to undefined, the product will be the id

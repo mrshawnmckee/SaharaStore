@@ -60,7 +60,7 @@ export const { addToCart,
     removeFromCart, 
     saveShippingAddress, 
     savePaymentMethod, 
-    clearCartItems 
+    clearCartItems,
 } = cartSlice.actions;
 
 // inport this into store
