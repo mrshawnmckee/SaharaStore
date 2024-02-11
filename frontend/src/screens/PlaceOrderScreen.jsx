@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import CheckoutSteps from '../Components/CheckoutSteps';
 import Message from '../Components/Message';
 import Loader from '../Components/Loader';
-import { useCreateOrderMutation } from '../slices/ordersApiSlice';
+import { useCreateOrderMutation } from '../slices/orderApiSlice';
 import  { clearCartItems } from '../slices/cartSlice';
 
 const PlaceOrderScreen = () => {

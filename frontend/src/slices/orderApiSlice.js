@@ -2,7 +2,7 @@ import { apiSlice } from './apiSlice';
 import { ORDERS_URL } from '../constants';
 
 // Injecting the enpoints into the apiSLice, which is connected to store in apislice reducerPth
-export const ordersApiSlice = apiSlice.injectEndpoints({
+export const orderApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         createOrder: builder.mutation({
             query: (order) => ({
@@ -11,7 +11,13 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
                 body: {...order}
             }),
         }),
+        getOrderDetails: builder.query({
+            query: (orderId) => ({
+                url: `${ORDERS_URL}/${orderId}`,
+            }),
+            keepUnusedDataFor: 5,
+        }),
     }),
 });
 
-export const { useCreateOrderMutation } = ordersApiSlice;
+export const { useCreateOrderMutation, useGetOrderDetailsQuery } = orderApiSlice;
